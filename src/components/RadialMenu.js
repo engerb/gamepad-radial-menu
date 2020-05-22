@@ -4,13 +4,14 @@ class RadialMenu extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = { 
+        this.state = {
+            activeButtonPressed: false,
+            activeButton: 13, // D-Pad down
             gamePadConnected: false,
             radius: 0,
             angle: 0,
             x: 0,
-            y: 0,
-            activeButton: 13 // D-Pad down
+            y: 0
         };
 
         this.gamePadIndex;
@@ -31,11 +32,12 @@ class RadialMenu extends React.Component {
 
         window.addEventListener('gamepaddisconnected', () => {
             this.setState({ 
+                activeButtonPressed: false,
                 gamePadConnected: false,
                 radius: 0,
                 angle: 0,
                 x: 0,
-                y: 0
+                y: 0,
             });
 
             clearInterval(this.interval);
@@ -48,10 +50,15 @@ class RadialMenu extends React.Component {
         /* Get state of controller, w3.org/TR/gamepad/ for PS4 mapping */
         const gamePad = navigator.getGamepads()[this.gamePadIndex];
         const x = gamePad.axes[2], y = gamePad.axes[3];
-        const activeButton = gamePad.buttons[this.state.activeButton];
+        const activeButton = gamePad.buttons[this.state.activeButton].pressed;
 
         /* Unless active button is pressed, do not bother */
         if (!activeButton) {
+            /* Was it just released? */
+            if (this.state.activeButtonPressed) {
+                this.selection();
+            }
+
             return;
         }
 
@@ -63,6 +70,7 @@ class RadialMenu extends React.Component {
         const radius = Math.sqrt( x*x + y*y );
 
         this.setState({ 
+            activeButtonPressed: true,
             radius: radius,
             angle: angle,
             x: x,
@@ -70,10 +78,23 @@ class RadialMenu extends React.Component {
         });
     }
 
+    /* 
+        The button to activate the radial menu was pressed, and now released,
+        let's determine if that means a selection was made
+    */
+    selection() {
+        // ...
+        
+        this.setState({ activeButtonPressed: false });
+    }
+
     render() {
         return (
-            <div className = 'radialMain'>
-                
+            <div className = {`radialMain ${ (this.state.activeButtonPressed ? 'open' : 'closed') }`}>
+                <div className = 'dotTester' style={{
+                    left: `${this.state.x * 50 + 50}%`,
+                    top: `${this.state.y * 50 + 50}%`,
+                }} />
             </div>
         );
     }

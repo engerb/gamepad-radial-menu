@@ -4,3 +4,35 @@ body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
 }
+
+.radialMain {
+    width: 500px;
+    height: 500px;
+
+    border-radius: 50%;
+    border: solid 50px grey;
+
+    position: absolute;
+    left: 100px;
+    top: 100px;
+
+    transition: all 60ms ease-in;
+
+    &.open {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    &.closed {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    .dotTester {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: black;
+    }
+}
