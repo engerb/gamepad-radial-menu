@@ -1,4 +1,10 @@
+/* 
+    Radial menu component that handles controller, radial menu rendering and
+    selection. Selection params and items in menu are handles in a higher state?
+*/
+
 import React from "react";
+
 
 class RadialMenu extends React.Component {
     constructor(props) {
@@ -18,12 +24,17 @@ class RadialMenu extends React.Component {
         this.interval;
     }
 
+
+    /* 
+        When controller is plugged in, and if selection button is pressed, compute
+        values needed to know if a selection will happen
+    */
     componentDidMount() {
         window.addEventListener('gamepadconnected', event => {
             this.setState({ gamePadConnected: true });
             this.gamePadIndex = event.gamepad.index;
 
-            this.interval = setInterval(this.pollGamepads.bind(this), 50);
+            this.interval = setInterval(this.pollGamepads.bind(this), 50); // 50?
 
             console.log('Gamepad connected at index %d: %s. %d buttons, %d axes.',
                 navigator.getGamepads()[event.gamepad.index].index, navigator.getGamepads()[event.gamepad.index].id,
@@ -46,6 +57,11 @@ class RadialMenu extends React.Component {
         });
     }
 
+
+    /* 
+        When controller is plugged in, and if selection button is pressed, compute
+        values needed to know if a selection will happen
+    */
     pollGamepads() {
         /* Get state of controller, w3.org/TR/gamepad/ for PS4 mapping */
         const gamePad = navigator.getGamepads()[this.gamePadIndex];
@@ -67,7 +83,7 @@ class RadialMenu extends React.Component {
         const angle = (( theta >= 0 ? theta : theta + 360 ) + 90) % 360;
 
         /* Get the radius / distance of joistick from center from 0 center to about 1 */
-        const radius = Math.sqrt( x*x + y*y );
+        const radius = Math.sqrt( x * x + y * y );
 
         this.setState({ 
             activeButtonPressed: true,
@@ -78,6 +94,7 @@ class RadialMenu extends React.Component {
         });
     }
 
+
     /* 
         The button to activate the radial menu was pressed, and now released,
         let's determine if that means a selection was made
@@ -87,6 +104,7 @@ class RadialMenu extends React.Component {
         
         this.setState({ activeButtonPressed: false });
     }
+
 
     render() {
         return (
