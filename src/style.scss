@@ -8,6 +8,7 @@ body {
 .radialMain {
     width: 500px;
     height: 500px;
+    box-sizing: border-box;
 
     border-radius: 50%;
     border: solid 50px grey;
@@ -15,6 +16,7 @@ body {
     position: absolute;
     left: 100px;
     top: 100px;
+    overflow: hidden;
 
     transition: all 60ms ease-in;
 
@@ -34,5 +36,13 @@ body {
         height: 30px;
         border-radius: 50%;
         background-color: black;
+    }
+
+    .xy {
+        position: absolute;
+        border-radius: 50%;
+        background-color: black;
+        filter: blur(75px);
+        transition: all 50ms;
     }
 }

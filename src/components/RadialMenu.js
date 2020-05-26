@@ -17,7 +17,17 @@ class RadialMenu extends React.Component {
             radius: 0,
             angle: 0,
             x: 0,
-            y: 0
+            y: 0,
+            radialMenu: {
+                width: 600,
+                toggle: false,
+                selectorWidth: 200,
+                centerTop: true,
+                items: [
+                    props.items // if any, or give them
+                ]
+            },
+            selectionIndex: -1 // top level?
         };
 
         this.gamePadIndex;
@@ -69,6 +79,7 @@ class RadialMenu extends React.Component {
         const activeButton = gamePad.buttons[this.state.activeButton].pressed;
 
         /* Unless active button is pressed, do not bother */
+        // Need a toggle check here too
         if (!activeButton) {
             /* Was it just released? */
             if (this.state.activeButtonPressed) {
@@ -78,12 +89,16 @@ class RadialMenu extends React.Component {
             return;
         }
 
-        /* Get the angle of right joystick starting from 0 at the top to 360 clockwise */
-        const theta = Math.atan2( y, x ) * ( 180 / Math.PI );
-        const angle = (( theta >= 0 ? theta : theta + 360 ) + 90) % 360;
+        /* Get the angle of right joystick starting from 0 at the top to 360 clockwise, then offset if needed for menu */
+        const angle = (( theta = Math.atan2( y, x ) * ( 180 / Math.PI ) ) => {
+            const offset = (this.state.radialMenu.centerTop ? (360 / this.state.radialMenu.items.length / 2) + 90 : 90 );
+            return (( theta >= 0 ? theta : theta + 360 ) + offset) % 360;
+        })();
 
-        /* Get the radius / distance of joistick from center from 0 center to about 1 */
-        const radius = Math.sqrt( x * x + y * y );
+        /* Get the radius / distance of joistick from center from 0 center to 1 outer */
+        const radius = (( val = Math.sqrt( x * x + y * y ) ) => {
+            return (val > 1 ? 1 : val);
+        })();
 
         this.setState({ 
             activeButtonPressed: true,
@@ -109,9 +124,12 @@ class RadialMenu extends React.Component {
     render() {
         return (
             <div className = {`radialMain ${ (this.state.activeButtonPressed ? 'open' : 'closed') }`}>
-                <div className = 'dotTester' style={{
-                    left: `${this.state.x * 50 + 50}%`,
-                    top: `${this.state.y * 50 + 50}%`,
+                <div className = 'xy' style={{
+                    left: `${((this.state.x * .5 + .5) * this.state.radialMenu.width) - this.state.radialMenu.selectorWidth }px`,
+                    top: `${((this.state.y * .5 + .5) * this.state.radialMenu.width) - this.state.radialMenu.selectorWidth }px`,
+                    width: `${this.state.radialMenu.selectorWidth}px`,
+                    height: `${this.state.radialMenu.selectorWidth}px`,
+                    opacity: `${0.25 + (1 - 0.25) * this.state.radius}`
                 }} />
             </div>
         );
