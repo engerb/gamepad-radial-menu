@@ -42,6 +42,7 @@ class App extends React.Component {
             },
         ];
 
+        // This would be inside RadialMenu, is only here for easy config for user testing
         this.state = {
             radialMenuConfig: {
                 styleClass: 'circle',
