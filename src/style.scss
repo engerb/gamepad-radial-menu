@@ -6,10 +6,6 @@ body {
 }
 
 .radialMain {
-    width: 500px;
-    height: 500px;
-    box-sizing: border-box;
-
     border-radius: 50%;
     border: solid 50px grey;
 
@@ -30,19 +26,19 @@ body {
         transform: scale(0.8);
     }
 
-    .dotTester {
+    .selector {
         position: absolute;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background-color: black;
-    }
-
-    .xy {
-        position: absolute;
-        border-radius: 50%;
-        background-color: black;
-        filter: blur(75px);
         transition: all 50ms;
+        
+        &.dot {
+            border-radius: 50%;
+            background-color: black;
+        }
+
+        &.blur {
+            border-radius: 50%;
+            background-color: black;
+            filter: blur(75px);
+        }
     }
 }

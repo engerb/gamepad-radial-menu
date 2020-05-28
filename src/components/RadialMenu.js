@@ -11,23 +11,17 @@ class RadialMenu extends React.Component {
         super(props);
 
         this.state = {
-            activeButtonPressed: false,
+            menuOpen: true,
             activeButton: 13, // D-Pad down
+            activeButtonToggled: false,
             gamePadConnected: false,
             radius: 0,
             angle: 0,
             x: 0,
             y: 0,
-            radialMenu: {
-                width: 600,
-                toggle: false,
-                selectorWidth: 200,
-                centerTop: true,
-                items: [
-                    props.items // if any, or give them
-                ]
-            },
-            selectionIndex: -1 // top level?
+            selectionIndex: -1, // top level?
+            radialMenuConfig: props.radialMenuConfig,
+            radialMenuItems: props.radialMenuItems
         };
 
         this.gamePadIndex;
@@ -35,10 +29,7 @@ class RadialMenu extends React.Component {
     }
 
 
-    /* 
-        When controller is plugged in, and if selection button is pressed, compute
-        values needed to know if a selection will happen
-    */
+    /* Everything to handle gamepad */
     componentDidMount() {
         window.addEventListener('gamepadconnected', event => {
             this.setState({ gamePadConnected: true });
@@ -68,69 +59,105 @@ class RadialMenu extends React.Component {
     }
 
 
-    /* 
-        When controller is plugged in, and if selection button is pressed, compute
-        values needed to know if a selection will happen
-    */
+    /* When controller is plugged in, and if selection button is pressed, compute values needed to know if a selection will happen */
     pollGamepads() {
-        /* Get state of controller, w3.org/TR/gamepad/ for PS4 mapping */
+        // Get state of controller, w3.org/TR/gamepad/ for PS4 mapping
         const gamePad = navigator.getGamepads()[this.gamePadIndex];
         const x = gamePad.axes[2], y = gamePad.axes[3];
         const activeButton = gamePad.buttons[this.state.activeButton].pressed;
 
-        /* Unless active button is pressed, do not bother */
-        // Need a toggle check here too
-        if (!activeButton) {
-            /* Was it just released? */
-            if (this.state.activeButtonPressed) {
-                this.selection();
+        
+        // Determine if the menu should be open or not:
+        // .... Flow for menu toggle
+        if (this.state.radialMenuConfig.toggle) {
+            if (activeButton) { 
+                if (!this.state.menuOpen) { 
+                    if (!this.state.activeButtonToggled) { 
+                        this.setState({ menuOpen: true });
+                    } 
+                } else if (this.state.activeButtonToggled) { 
+                    this.selectionMade();
+                }
+            } else {
+                if (this.state.menuOpen) { 
+                    this.setState({ activeButtonToggled: true });
+                } else {
+                    this.setState({ activeButtonToggled: false });
+                }
             }
-
-            return;
+        // .... Flow for simple press and release of button
+        } else {
+            if (activeButton) { 
+                this.setState({ menuOpen: true });
+            } else if (this.state.menuOpen) {
+                this.selectionMade();
+            }
         }
 
-        /* Get the angle of right joystick starting from 0 at the top to 360 clockwise, then offset if needed for menu */
-        const angle = (( theta = Math.atan2( y, x ) * ( 180 / Math.PI ) ) => {
-            const offset = (this.state.radialMenu.centerTop ? (360 / this.state.radialMenu.items.length / 2) + 90 : 90 );
-            return (( theta >= 0 ? theta : theta + 360 ) + offset) % 360;
-        })();
+        // Only do all the cool math if the menu is open
+        if (this.state.menuOpen) {
+            // Get the angle of right joystick starting from 0 at the top to 360 clockwise, then offset if needed for menu
+            const angle = (( theta = Math.atan2( y, x ) * ( 180 / Math.PI ) ) => {
+                const offset = (this.state.radialMenuConfig.centerTop ? (360 / this.state.radialMenuItems.length / 2) + 90 : 90 );
+                return (( theta >= 0 ? theta : theta + 360 ) + offset) % 360;
+            })();
 
-        /* Get the radius / distance of joistick from center from 0 center to 1 outer */
-        const radius = (( val = Math.sqrt( x * x + y * y ) ) => {
-            return (val > 1 ? 1 : val);
-        })();
+            // Get the radius / distance of joistick from center from 0 center to 1 outer
+            const radius = (( val = Math.sqrt( x * x + y * y ) ) => {
+                return (val > 1 ? 1 : val);
+            })();
+
+            this.setState({ 
+                radius: radius,
+                angle: angle,
+                x: x,
+                y: y
+            }); 
+
+            console.log(this.state.radialMenuItems.length);
+        }
+    }
+
+
+    /* The button to activate the radial menu was pressed, and now released, let's determine if that means a selection was made */
+    selectionMade() {
+        // ...
+        console.log('selection');
+
+        // check if outside radius
+        // then check where
 
         this.setState({ 
-            activeButtonPressed: true,
-            radius: radius,
-            angle: angle,
-            x: x,
-            y: y
+            menuOpen: false
         });
     }
 
 
-    /* 
-        The button to activate the radial menu was pressed, and now released,
-        let's determine if that means a selection was made
-    */
-    selection() {
-        // ...
-        
-        this.setState({ activeButtonPressed: false });
+    /* Receive items and other configs for menu */
+    updateMenu(menuState) {
+        // maybe not needed? 
     }
 
 
     render() {
+        let selector = (
+            this.state.radialMenuConfig.selectorStyle.showSelector ?
+            <div className = {`selector ${this.state.radialMenuConfig.selectorStyle.styleClass}`} style={{
+                left: `${Math.round(((this.state.x * .5 + .5) * this.state.radialMenuConfig.width) - (this.state.radialMenuConfig.selectorStyle.width / 2))}px`,
+                top: `${Math.round(((this.state.y * .5 + .5) * this.state.radialMenuConfig.width) - (this.state.radialMenuConfig.selectorStyle.width / 2))}px`,
+                width: `${this.state.radialMenuConfig.selectorStyle.width}px`,
+                height: `${this.state.radialMenuConfig.selectorStyle.width}px`,
+                opacity: `${0.25 + (1 - 0.25) * this.state.radius}`
+            }}/>:
+            null
+        );
+
         return (
-            <div className = {`radialMain ${ (this.state.activeButtonPressed ? 'open' : 'closed') }`}>
-                <div className = 'xy' style={{
-                    left: `${((this.state.x * .5 + .5) * this.state.radialMenu.width) - this.state.radialMenu.selectorWidth }px`,
-                    top: `${((this.state.y * .5 + .5) * this.state.radialMenu.width) - this.state.radialMenu.selectorWidth }px`,
-                    width: `${this.state.radialMenu.selectorWidth}px`,
-                    height: `${this.state.radialMenu.selectorWidth}px`,
-                    opacity: `${0.25 + (1 - 0.25) * this.state.radius}`
-                }} />
+            <div className = {`radialMain ${ (this.state.menuOpen ? 'open' : 'closed') } ${this.state.radialMenuConfig.styleClass} `} style={{
+                    width: `${this.state.radialMenuConfig.width}px`,
+                    height: `${this.state.radialMenuConfig.width}px`,
+                }} >
+                {selector}
             </div>
         );
     }
