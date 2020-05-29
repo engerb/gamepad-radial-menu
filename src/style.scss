@@ -3,16 +3,17 @@
 body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
+    background-color: #333333;
 }
 
 .radialMain {
     border-radius: 50%;
-    border: solid 50px grey;
+    // border: solid 50px grey;
 
     position: absolute;
     left: 100px;
     top: 100px;
-    overflow: hidden;
+    // overflow: hidden;
 
     transition: all 60ms ease-in;
 
@@ -39,6 +40,51 @@ body {
             border-radius: 50%;
             background-color: black;
             filter: blur(75px);
+        }
+    }
+
+    &.circle {
+        .itemBG {
+            position: relative;
+            
+            svg {
+                position: absolute;
+
+                polygon {
+                    fill: rgba(0, 0, 0, 0.575);
+                    transition: all 200ms;
+
+                    transform: scale(0.98);
+                    transform-origin: center;
+
+                    &.hover {
+                        fill: rgba(255, 255, 255, 0.849);
+                        transform: scale(1);
+                    }
+
+                    &.selected {
+                        fill: rgb(0, 162, 255);
+                        animation: select 400ms;
+
+                        &.hover {
+                            fill: rgb(106, 200, 255);
+                        }
+
+                        @keyframes select {
+                            0%   {
+                                fill: rgb(0, 162, 255);
+                                transform: scale(1);
+                            } 50%  {
+                                fill: rgb(106, 200, 255);
+                                transform: scale(0.97);
+                            } 100% {
+                                fill: rgb(0, 162, 255);
+                                transform: scale(1);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
