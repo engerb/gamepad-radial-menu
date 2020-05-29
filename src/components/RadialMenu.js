@@ -11,7 +11,7 @@ class RadialMenu extends React.Component {
         super(props);
 
         this.state = {
-            menuOpen: true,
+            menuOpen: false,
             activeButton: 13, // D-Pad down
             activeButtonToggled: false,
             gamePadConnected: false,
@@ -19,7 +19,9 @@ class RadialMenu extends React.Component {
             angle: 0,
             x: 0,
             y: 0,
-            selectionIndex: -1, // top level?
+            selectionIndex: -1, 
+            hoverIndex: -1,
+            interact: true,
             radialMenuConfig: props.radialMenuConfig,
             radialMenuItems: props.radialMenuItems
         };
@@ -68,29 +70,31 @@ class RadialMenu extends React.Component {
 
         
         // Determine if the menu should be open or not:
-        // .... Flow for menu toggle
-        if (this.state.radialMenuConfig.toggle) {
-            if (activeButton) { 
-                if (!this.state.menuOpen) { 
-                    if (!this.state.activeButtonToggled) { 
-                        this.setState({ menuOpen: true });
-                    } 
-                } else if (this.state.activeButtonToggled) { 
-                    this.selectionMade();
-                }
-            } else {
-                if (this.state.menuOpen) { 
-                    this.setState({ activeButtonToggled: true });
+        if (this.state.interact) {
+            // .... Flow for menu toggle
+            if (this.state.radialMenuConfig.toggle) {
+                if (activeButton) { 
+                    if (!this.state.menuOpen) { 
+                        if (!this.state.activeButtonToggled) { 
+                            this.setState({ menuOpen: true });
+                        } 
+                    } else if (this.state.activeButtonToggled) { 
+                        this.selectionMade({hover: false});
+                    }
                 } else {
-                    this.setState({ activeButtonToggled: false });
+                    if (this.state.menuOpen) { 
+                        this.setState({ activeButtonToggled: true });
+                    } else {
+                        this.setState({ activeButtonToggled: false });
+                    }
                 }
-            }
-        // .... Flow for simple press and release of button
-        } else {
-            if (activeButton) { 
-                this.setState({ menuOpen: true });
-            } else if (this.state.menuOpen) {
-                this.selectionMade();
+            // .... Flow for simple press and release of button
+            } else {
+                if (activeButton) { 
+                    this.setState({ menuOpen: true });
+                } else if (this.state.menuOpen) {
+                    this.selectionMade({hover: false});
+                }
             }
         }
 
@@ -114,22 +118,49 @@ class RadialMenu extends React.Component {
                 y: y
             }); 
 
-            console.log(this.state.radialMenuItems.length);
+            this.selectionMade({hover: true});
         }
     }
 
 
     /* The button to activate the radial menu was pressed, and now released, let's determine if that means a selection was made */
-    selectionMade() {
-        // ...
-        console.log('selection');
+    selectionMade(props) {
+        // Is the stick in the selection threshold?
+        if (this.state.radius >= this.state.radialMenuConfig.selectionRadius) {
+            const range = 360 / this.state.radialMenuItems.length;
 
-        // check if outside radius
-        // then check where
+            for (let i = 0; i < this.state.radialMenuItems.length; i++) {
+                if (this.state.angle >= i * range && this.state.angle <= (i + 1) * range) {
+                    if (!props.hover) {
+                        this.setState({ 
+                            selectionIndex: i, // could toggle?
+                            hoverIndex: -1,
+                            interact: false 
+                        });
 
-        this.setState({ 
-            menuOpen: false
-        });
+                        // Let the selection show
+                        this.timedEvent = setTimeout(() => {
+                            this.setState({ 
+                                menuOpen: false,
+                                hoverIndex: -1,
+                                interact: true 
+                            });
+                        }, (this.state.radialMenuConfig.selectTime));
+
+                        console.log('Selection: ' + i);
+                    } else {
+                        this.setState({ hoverIndex: i });
+                    }
+                    break;
+                }
+            }
+        } else {
+            if (!props.hover) {
+                this.setState({ menuOpen: false });
+            } else {
+                this.setState({ hoverIndex: -1 });
+            }
+        }
     }
 
 
@@ -143,8 +174,8 @@ class RadialMenu extends React.Component {
         let selector = (
             this.state.radialMenuConfig.selectorStyle.showSelector ?
             <div className = {`selector ${this.state.radialMenuConfig.selectorStyle.styleClass}`} style={{
-                left: `${Math.round(((this.state.x * .5 + .5) * this.state.radialMenuConfig.width) - (this.state.radialMenuConfig.selectorStyle.width / 2))}px`,
-                top: `${Math.round(((this.state.y * .5 + .5) * this.state.radialMenuConfig.width) - (this.state.radialMenuConfig.selectorStyle.width / 2))}px`,
+                left: `${Math.round(((this.state.x * .4 + .5) * this.state.radialMenuConfig.width) - (this.state.radialMenuConfig.selectorStyle.width / 2))}px`,
+                top: `${Math.round(((this.state.y * .4 + .5) * this.state.radialMenuConfig.width) - (this.state.radialMenuConfig.selectorStyle.width / 2))}px`,
                 width: `${this.state.radialMenuConfig.selectorStyle.width}px`,
                 height: `${this.state.radialMenuConfig.selectorStyle.width}px`,
                 opacity: `${0.25 + (1 - 0.25) * this.state.radius}`
@@ -152,11 +183,65 @@ class RadialMenu extends React.Component {
             null
         );
 
+        const items = (() => {
+            return <div></div>;
+        })();
+
+        const itemTitles = (() => {
+            return <div></div>;
+        })();
+
+        const itemBG = (() => {
+            const width = this.state.radialMenuConfig.width;
+            const styleClass = this.state.radialMenuConfig.styleClass;
+            const strokeWidth = this.state.radialMenuConfig.strokeWidth;
+
+            if (styleClass === 'circle') {
+                const degWidth = (360 / this.state.radialMenuItems.length);
+                var sections = [];
+
+                // Calculate all the vertices
+                for (let i = 0; i < this.state.radialMenuItems.length; i++) {
+                    const degStart = (this.state.radialMenuConfig.centerTop ? -(degWidth / 2) + -90 : -90 ) + (degWidth * i) + this.state.radialMenuConfig.degSpace;
+                    const degEnd = (this.state.radialMenuConfig.centerTop ? (degWidth / 2) - 90 : degWidth - 90 ) + (degWidth * i) - this.state.radialMenuConfig.degSpace;
+
+                    const x1 = Math.round( width * Math.cos(Math.PI * degStart / 180) ) + (width/2);
+                    const y1 = Math.round( width * Math.sin(Math.PI * degStart / 180) ) + (width/2);
+
+                    const x2 = Math.round( width * Math.cos(Math.PI * degEnd / 180) ) + (width/2);
+                    const y2 = Math.round( width * Math.sin(Math.PI * degEnd / 180) ) + (width/2);
+
+                    sections.push(
+                        <polygon key={i} 
+                            className={`${((this.state.hoverIndex == i) ? 'hover' : '')} ${((this.state.selectionIndex == i) ? 'selected' : '')}`} mask='url(#mask)' 
+                            points={`${x1},${y1} ${(width/2)},${(width/2)} ${x2},${y2}`} 
+                        />
+                    );
+                }
+
+                return (
+                    <div className='itemBG'>
+                        <svg height={width} width={width}>
+                            <defs>
+                                <mask id='mask'>
+                                    <circle cx={width/2} cy={width/2} r={width/2 - strokeWidth/2} stroke='white' strokeWidth={strokeWidth} fill='none' />
+                                </mask>
+                            </defs>
+                            {sections}
+                        </svg>
+                    </div>
+                );
+            }
+        })();
+
         return (
             <div className = {`radialMain ${ (this.state.menuOpen ? 'open' : 'closed') } ${this.state.radialMenuConfig.styleClass} `} style={{
                     width: `${this.state.radialMenuConfig.width}px`,
                     height: `${this.state.radialMenuConfig.width}px`,
                 }} >
+                {items}
+                {itemTitles}
+                {itemBG}
                 {selector}
             </div>
         );
