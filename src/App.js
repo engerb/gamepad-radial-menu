@@ -67,7 +67,6 @@ class App extends React.Component {
 
     render() {
         return (
-            <>
             <Router>
                 <Switch>
                     <Route path='/bar'>
@@ -78,9 +77,9 @@ class App extends React.Component {
                     </Route>
                 </Switch>
                 
+                
                 <TestSettings radialMenuConfig = {this.state.radialMenuConfig} itemsToTest = {this.state.itemsToTest}/>
             </Router>
-            </>
         );
     }
 }
