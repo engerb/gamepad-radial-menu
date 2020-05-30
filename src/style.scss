@@ -6,15 +6,14 @@ body {
     background-color: #333333;
 }
 
-.radialMain {
-    border-radius: 50%;
-    // border: solid 50px grey;
-
+.centerWrap {
     position: absolute;
-    left: 100px;
-    top: 100px;
-    // overflow: hidden;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
+.radialMain {
     transition: all 60ms ease-in;
 
     &.open {

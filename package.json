@@ -31,6 +31,7 @@
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.13.1",
     "react": "^16.13.1",
+    "react-dat-gui": "^4.0.3",
     "react-dom": "^16.13.1",
     "react-loader": "^2.4.7",
     "react-redux": "^7.2.0",
