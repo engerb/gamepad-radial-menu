@@ -8,16 +8,23 @@ class TestSettings extends React.Component {
         this.state = {
             data: {
                 package: 'react-dat-gui',
-                power: 9000,
+                itemCount: props.itemCount,
                 isAwesome: true,
                 feelsLike: '#2FA1D6',
             }
         }
 
-        this.handleUpdate = newData =>
-            this.setState(prevState => ({
-            data: { ...prevState.data, ...newData }
-        }));
+        this.handleUpdate = ((newData) => {
+            // Item count or radiel menu config?
+            if (newData.itemCount != this.state.itemCount) {
+                this.props.itemCountCallback(newData.itemCount);
+            } else {
+                // ...
+            }
+
+
+            this.setState({data: newData});
+        });
     }
 
     render() {
@@ -26,7 +33,7 @@ class TestSettings extends React.Component {
         return (
             <DatGui data={data} onUpdate={this.handleUpdate}>
                 <DatString path='package' label='Package' />
-                <DatNumber path='power' label='Power' min={9000} max={9999} step={1} />
+                <DatNumber path='itemCount' label='Item count' min={3} max={10} step={1} />
                 <DatBoolean path='isAwesome' label='Awesome?' />
                 <DatColor path='feelsLike' label='Feels Like' />
             </DatGui>

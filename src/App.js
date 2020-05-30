@@ -41,6 +41,14 @@ class App extends React.Component {
                 name: 'hello',
                 icon: 'hello.png'
             },
+            {
+                name: 'hello',
+                icon: 'hello.png'
+            },
+            {
+                name: 'hello',
+                icon: 'hello.png'
+            }
         ];
 
         // This would be inside RadialMenu, is only here for easy config for user testing
@@ -49,7 +57,7 @@ class App extends React.Component {
                 styleClass: 'circle',
                 width: 600,
                 selectionRadius: 0.5, // 0-1
-                toggle: false,
+                toggle: true,
                 centerTop: true,
                 strokeWidth: 100,
                 degSpace: 0.5,
@@ -60,9 +68,12 @@ class App extends React.Component {
                     styleClass: 'dot'
                 }
             },
-            itemsToTest: 6,
+            itemCount: 6,
             radialMenuItems: this.testingItems.slice(0, 6)
         }
+
+        this.itemCountCallback = itemCount => this.setState({radialMenuItems: this.testingItems.slice(0, itemCount)});
+        this.radialMenuConfigCallback = radialMenuConfig => this.setState({radialMenuConfig: radialMenuConfig});
     }
 
     render() {
@@ -78,7 +89,12 @@ class App extends React.Component {
                 </Switch>
                 
                 
-                <TestSettings radialMenuConfig = {this.state.radialMenuConfig} itemsToTest = {this.state.itemsToTest}/>
+                <TestSettings 
+                    radialMenuConfig = {this.state.radialMenuConfig} 
+                    itemCount = {this.state.itemCount} 
+                    itemCountCallback = {this.itemCountCallback} 
+                    radialMenuConfigCallback = {this.radialMenuConfigCallback}
+                />
             </Router>
         );
     }

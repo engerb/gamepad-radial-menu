@@ -11,7 +11,7 @@ class RadialMenu extends React.Component {
         super(props);
 
         this.state = {
-            menuOpen: false,
+            menuOpen: true,
             activeButton: 13, // D-Pad down
             activeButtonToggled: false,
             gamePadConnected: false,
@@ -165,8 +165,11 @@ class RadialMenu extends React.Component {
 
 
     /* Receive items and other configs for menu */
-    updateMenu(menuState) {
-        // maybe not needed? 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        return {
+            radialMenuConfig: nextProps.radialMenuConfig,
+            radialMenuItems: nextProps.radialMenuItems
+        };
     }
 
 
