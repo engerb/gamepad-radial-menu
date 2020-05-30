@@ -4,7 +4,7 @@
   "description": "Model viewer for Serve rover 1.5 and up",
   "private": true,
   "scripts": {
-    "start-dev": "webpack-dev-server --open --mode development",
+    "start-dev": "webpack-dev-server --history-api-fallback --open --mode development",
     "build": "webpack --mode production",
     "start": "node server.js",
     "postinstall": "npm install express serve-static path"
@@ -34,7 +34,7 @@
     "react-dom": "^16.13.1",
     "react-loader": "^2.4.7",
     "react-redux": "^7.2.0",
-    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
     "sass": "^1.26.3",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.1.4",
