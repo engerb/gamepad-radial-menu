@@ -62,6 +62,7 @@ class App extends React.Component {
                 strokeWidth: 100,
                 degSpace: 0.5,
                 selectTime: 400,
+                labels: 'inside',
                 selectorStyle: {
                     showSelector: true,
                     width: 10,
@@ -69,10 +70,14 @@ class App extends React.Component {
                 }
             },
             itemCount: 6,
-            radialMenuItems: this.testingItems.slice(0, 6)
+            radialMenuItems: this.testingItems.slice(0, 6),
+            activeButton: 13,
+            // menuOpen: true
         }
 
+        // this.menuToggleCallback = () => ({this.setState({menuOpen: !this.state.menuOpen}); console.log(this.state.menuOpen)});//this.setState({menuOpen: !this.state.menuOpen});
         this.itemCountCallback = itemCount => this.setState({radialMenuItems: this.testingItems.slice(0, itemCount)});
+        this.activeButtonCallback = activeButton => this.setState({activeButton: activeButton});
         this.radialMenuConfigCallback = radialMenuConfig => this.setState({radialMenuConfig: radialMenuConfig});
     }
 
@@ -84,7 +89,12 @@ class App extends React.Component {
                         <h1>It's a cool flat menu!</h1>
                     </Route>
                     <Route path='/'>
-                        <RadialMenu radialMenuConfig = {this.state.radialMenuConfig} radialMenuItems = {this.state.radialMenuItems} />
+                        <RadialMenu 
+                            radialMenuConfig = {this.state.radialMenuConfig} 
+                            radialMenuItems = {this.state.radialMenuItems} 
+                            activeButton = {this.state.activeButton}
+                            // menuOpen = {this.state.menuOpen}
+                        />
                     </Route>
                 </Switch>
                 
@@ -92,7 +102,10 @@ class App extends React.Component {
                 <TestSettings 
                     radialMenuConfig = {this.state.radialMenuConfig} 
                     itemCount = {this.state.itemCount} 
+                    activeButton = {this.state.activeButton}
+                    // menuToggleCallback = {this.menuToggleCallback}
                     itemCountCallback = {this.itemCountCallback} 
+                    activeButtonCallback = {this.activeButtonCallback} 
                     radialMenuConfigCallback = {this.radialMenuConfigCallback}
                 />
             </Router>

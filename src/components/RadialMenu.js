@@ -12,7 +12,7 @@ class RadialMenu extends React.Component {
 
         this.state = {
             menuOpen: true,
-            activeButton: 13, // D-Pad down
+            activeButton: props.activeButton, // D-Pad down
             activeButtonToggled: false,
             gamePadConnected: false,
             radius: 0,
@@ -238,14 +238,16 @@ class RadialMenu extends React.Component {
         })();
 
         return (
-            <div className = {`radialMain ${ (this.state.menuOpen ? 'open' : 'closed') } ${this.state.radialMenuConfig.styleClass} `} style={{
-                    width: `${this.state.radialMenuConfig.width}px`,
-                    height: `${this.state.radialMenuConfig.width}px`,
-                }} >
-                {items}
-                {itemTitles}
-                {itemBG}
-                {selector}
+            <div className = 'centerWrap'>
+                <div className = {`radialMain ${ (this.state.menuOpen ? 'open' : 'closed') } ${this.state.radialMenuConfig.styleClass} `} style={{
+                        width: `${this.state.radialMenuConfig.width}px`,
+                        height: `${this.state.radialMenuConfig.width}px`,
+                    }} >
+                    {items}
+                    {itemTitles}
+                    {itemBG}
+                    {selector}
+                </div>
             </div>
         );
     }
