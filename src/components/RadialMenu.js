@@ -147,7 +147,7 @@ class RadialMenu extends React.Component {
                             });
                         }, (this.state.radialMenuConfig.selectTime));
 
-                        console.log('Selection: ' + i);
+                        // console.log('Selection: ' + i);
                     } else {
                         this.setState({ hoverIndex: i });
                     }
@@ -168,7 +168,8 @@ class RadialMenu extends React.Component {
     static getDerivedStateFromProps(nextProps, prevState) {
         return {
             radialMenuConfig: nextProps.radialMenuConfig,
-            radialMenuItems: nextProps.radialMenuItems
+            radialMenuItems: nextProps.radialMenuItems,
+            activeButton: nextProps.activeButton,
         };
     }
 

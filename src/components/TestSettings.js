@@ -25,6 +25,29 @@ class TestSettings extends React.Component {
             }
         }
 
+        this.controllerButtons = {
+            numbers: [...Array(17).keys()],
+            names: [
+                '0: X button',
+                '1: Circle button',
+                '2: Square button',
+                '3: Triangle button',
+                '4: L1',
+                '5: R1',
+                '6: L2 trigger',
+                '7: R2 trigger',
+                '8: Share button',
+                '9: Options button',
+                '10: Left trigger (pushed in)',
+                '11: Right trigger (pushed in)',
+                '12: D-pad up',
+                '13: D-pad down',
+                '14: D-pad left',
+                '15: D-pad right',
+                '16: Playstation button'
+            ]
+        }
+
         // this.handleButtonClick = (() => {
         //     this.props.menuToggleCallback();
         // });
@@ -33,7 +56,7 @@ class TestSettings extends React.Component {
             // Item count or radiel menu config?
             if (newData.itemCount != this.state.data.itemCount) {
                 this.props.itemCountCallback(newData.itemCount);
-            } else if (newData.activeButton !== this.state.data.activeButton) {
+            } else if (newData.activeButton != this.state.data.activeButton) {
                 this.props.activeButtonCallback(newData.activeButton);
             } else {
                 this.props.radialMenuConfigCallback(newData.radialMenuConfig);
@@ -52,11 +75,12 @@ class TestSettings extends React.Component {
                 
                 <DatNumber label='Item count' path='itemCount' min={3} max={10} step={1} />
                 <DatBoolean label='Toggle open' path='radialMenuConfig.toggle' />
-                <DatString label='Selection button' path='activeButton' />
+                {/* <DatString label='Controller button' path='activeButton' /> */}
+                <DatSelect label='Controller button' path='activeButton' options={this.controllerButtons.numbers}/>
                 {/* <DatButton label='Toggle menu' onClick={this.handleButtonClick} /> */}
                 
                 <DatFolder title='Menu config'>
-                    <DatSelect label='Menu class' path='radialMenuConfig.styleClass' options={['circle', 'octo', 'animalCrossing']}/>
+                    {/* <DatSelect label='Menu class' path='radialMenuConfig.styleClass' options={['circle', 'octo', 'animalCrossing']}/> */}
                     <DatSelect label='Labels' path='radialMenuConfig.labels' options={['center', 'above', 'inside']}/>
                     <DatNumber label='Menu width' path='radialMenuConfig.width' min={300} max={1000} step={1} />
                     <DatNumber label='Menu thickness' path='radialMenuConfig.strokeWidth' min={50} max={500} step={1} />

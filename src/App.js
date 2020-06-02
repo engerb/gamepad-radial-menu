@@ -56,7 +56,7 @@ class App extends React.Component {
             radialMenuConfig: {
                 styleClass: 'circle',
                 width: 600,
-                selectionRadius: 0.5, // 0-1
+                selectionRadius: 0.3,
                 toggle: true,
                 centerTop: true,
                 strokeWidth: 100,
