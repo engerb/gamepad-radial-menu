@@ -10,72 +10,85 @@ class App extends React.Component {
 
         this.testingItems = [
             {
-                name: 'hello',
+                name: 'On delivery',
+                icon: 'onDelivery.png'
+            },
+            {
+                name: 'Hello!',
                 icon: 'hello.png'
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Right turn',
+                icon: 'turnRight.png'
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Opps!',
+                icon: 'oops.png'
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'All off',
+                icon: 'none.png'
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Crossing',
+                icon: 'crossing.png'
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Left turn',
+                icon: 'turnLeft.png'
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Excuse me',
+                icon: 'excuseMe.png'
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Claxon',
+                icon: 'claxon.png'
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
-            },
-            {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Wink',
+                icon: 'wink.png'
             }
         ];
 
         // This would be inside RadialMenu, is only here for easy config for user testing
         this.state = {
             radialMenuConfig: {
-                styleClass: 'circle',
-                width: 600,
+                testOpen: false,
+
+                toggle: false,
+                deadZone: 0.0,
                 selectionRadius: 0.3,
-                toggle: true,
-                centerTop: true,
-                strokeWidth: 100,
+                
+                width: 600,
                 degSpace: 0.5,
                 selectTime: 400,
+                strokeWidth: 100,
+                centerTop: true,
                 labels: 'inside',
+                styleClass: 'circle',
+                
+                hoverColor: 'rgba(255, 255, 255, 0.849)',
+                inactiveColor: 'rgba(0, 0, 0, 0.575)',
+                selectionColor: 'rgb(0, 162, 255)',
+                hoverSelectionColor: 'rgb(106, 200, 255)',
+
+                labelHoverColor: '#grey',
+                labelInactiveColor: '#red',
+                labelSelectionColor: '#blue',
+                
                 selectorStyle: {
-                    showSelector: true,
                     width: 10,
-                    styleClass: 'dot'
+                    styleClass: 'dot',
+                    showSelector: true,
                 }
             },
-            itemCount: 6,
+            itemCount: 8,
             radialMenuItems: this.testingItems.slice(0, 6),
-            activeButton: 13,
-            // menuOpen: true
+            activeButton: 13
         }
 
-        // this.menuToggleCallback = () => ({this.setState({menuOpen: !this.state.menuOpen}); console.log(this.state.menuOpen)});//this.setState({menuOpen: !this.state.menuOpen});
+        this.menuTestOpen = open => this.setState({testOpen: open});
         this.itemCountCallback = itemCount => this.setState({radialMenuItems: this.testingItems.slice(0, itemCount)});
         this.activeButtonCallback = activeButton => this.setState({activeButton: activeButton});
         this.radialMenuConfigCallback = radialMenuConfig => this.setState({radialMenuConfig: radialMenuConfig});
@@ -93,7 +106,7 @@ class App extends React.Component {
                             radialMenuConfig = {this.state.radialMenuConfig} 
                             radialMenuItems = {this.state.radialMenuItems} 
                             activeButton = {this.state.activeButton}
-                            // menuOpen = {this.state.menuOpen}
+                            testOpen = {this.state.testOpen}
                         />
                     </Route>
                 </Switch>
@@ -103,7 +116,7 @@ class App extends React.Component {
                     radialMenuConfig = {this.state.radialMenuConfig} 
                     itemCount = {this.state.itemCount} 
                     activeButton = {this.state.activeButton}
-                    // menuToggleCallback = {this.menuToggleCallback}
+                    menuTestOpen = {this.menuTestOpen}
                     itemCountCallback = {this.itemCountCallback} 
                     activeButtonCallback = {this.activeButtonCallback} 
                     radialMenuConfigCallback = {this.radialMenuConfigCallback}

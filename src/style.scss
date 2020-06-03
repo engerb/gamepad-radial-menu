@@ -13,12 +13,75 @@ body {
     transform: translate(-50%, -50%);
 }
 
+.configMain {
+    position: fixed;
+    right: 15px;
+    top: 15px;
+    width: 280px;
+    font-size: 12px;
+    font-family: Lucida Grande,sans-serif;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+
+    .react-dat-gui {
+        position: relative;
+        right: 0;
+        width: 100%;
+    }
+
+    .helpBox {
+        background-color: rgba(0, 0, 0, 0.568);
+        box-sizing: border-box;
+        padding: 15px 15px 5px 15px;
+        border-left: 5px solid #806787;
+        border-bottom: 1px solid #272727;
+        border-top: 1px solid #272727;
+
+        p {
+            color: rgb(211, 211, 211);
+            margin-top: 0;
+        }
+
+        span {
+            color: #806787;
+            font-weight: bold;
+        }
+
+        a {
+            color:#806787;
+        }
+
+        .warning {
+            color: rgb(218, 69, 69);
+        }
+    }
+
+    .toggleMenu {
+        background-color: black;
+        box-sizing: border-box;
+        padding: 5px 15px;
+        cursor: pointer;
+
+        p {
+            margin: 0;
+            color: white;
+        }
+    }
+}
+
 .radialMain {
     transition: all 60ms ease-in;
 
     &.open {
         opacity: 1;
         transform: scale(1);
+    }
+
+    &.testOpen {
+        opacity: 1!important;
+        transform: scale(1)!important;
     }
 
     &.closed {
@@ -50,23 +113,24 @@ body {
                 position: absolute;
 
                 polygon {
-                    fill: rgba(0, 0, 0, 0.575);
+                    // fill: rgba(0, 0, 0, 0.575);
                     transition: all 200ms;
 
                     transform: scale(0.98);
                     transform-origin: center;
 
                     &.hover {
-                        fill: rgba(255, 255, 255, 0.849);
+                        // fill: rgba(255, 255, 255, 0.849);
                         transform: scale(1);
                     }
 
                     &.selected {
-                        fill: rgb(0, 162, 255);
-                        animation: select 400ms;
+                        // fill: rgb(0, 162, 255);
+                        // animation: select 400ms;
+                        animation: select;
 
                         &.hover {
-                            fill: rgb(106, 200, 255);
+                            // fill: rgb(106, 200, 255);
                         }
 
                         @keyframes select {

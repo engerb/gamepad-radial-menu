@@ -11,7 +11,8 @@ class RadialMenu extends React.Component {
         super(props);
 
         this.state = {
-            menuOpen: true,
+            menuOpen: false,
+            testOpen: props.testOpen, // for config use only
             activeButton: props.activeButton, // D-Pad down
             activeButtonToggled: false,
             gamePadConnected: false,
@@ -163,6 +164,19 @@ class RadialMenu extends React.Component {
         }
     }
 
+    /* State driven style for menu */
+    fillColor(i) {
+        if (this.state.hoverIndex == i && this.state.selectionIndex == i) {
+            return this.state.radialMenuConfig.hoverSelectionColor;
+        } else if (this.state.selectionIndex == i) {
+            return this.state.radialMenuConfig.selectionColor;
+        } else if (this.state.hoverIndex == i) {
+            return this.state.radialMenuConfig.hoverColor;
+        } else {
+            return this.state.radialMenuConfig.inactiveColor;
+        }
+    }
+
 
     /* Receive items and other configs for menu */
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -170,12 +184,13 @@ class RadialMenu extends React.Component {
             radialMenuConfig: nextProps.radialMenuConfig,
             radialMenuItems: nextProps.radialMenuItems,
             activeButton: nextProps.activeButton,
+            testOpen: nextProps.testOpen
         };
     }
 
 
     render() {
-        let selector = (
+        const selector = (
             this.state.radialMenuConfig.selectorStyle.showSelector ?
             <div className = {`selector ${this.state.radialMenuConfig.selectorStyle.styleClass}`} style={{
                 left: `${Math.round(((this.state.x * .4 + .5) * this.state.radialMenuConfig.width) - (this.state.radialMenuConfig.selectorStyle.width / 2))}px`,
@@ -183,8 +198,8 @@ class RadialMenu extends React.Component {
                 width: `${this.state.radialMenuConfig.selectorStyle.width}px`,
                 height: `${this.state.radialMenuConfig.selectorStyle.width}px`,
                 opacity: `${0.25 + (1 - 0.25) * this.state.radius}`
-            }}/>:
-            null
+            }}/>
+            : null
         );
 
         const items = (() => {
@@ -217,8 +232,11 @@ class RadialMenu extends React.Component {
 
                     sections.push(
                         <polygon key={i} 
-                            className={`${((this.state.hoverIndex == i) ? 'hover' : '')} ${((this.state.selectionIndex == i) ? 'selected' : '')}`} mask='url(#mask)' 
-                            points={`${x1},${y1} ${(width/2)},${(width/2)} ${x2},${y2}`} 
+                            className = {`${((this.state.hoverIndex == i) ? 'hover' : '')} ${((this.state.selectionIndex == i) ? 'selected' : '')}`}
+                            style = {{animationDuration: `${this.state.radialMenuConfig.selectTime}ms`}}
+                            fill = {this.fillColor(i)}
+                            mask = 'url(#mask)' 
+                            points = {`${x1},${y1} ${(width/2)},${(width/2)} ${x2},${y2}`} 
                         />
                     );
                 }
@@ -240,7 +258,14 @@ class RadialMenu extends React.Component {
 
         return (
             <div className = 'centerWrap'>
-                <div className = {`radialMain ${ (this.state.menuOpen ? 'open' : 'closed') } ${this.state.radialMenuConfig.styleClass} `} style={{
+                <div 
+                    className = {
+                        `radialMain 
+                        ${ (this.state.menuOpen ? 'open' : 'closed') } 
+                        ${ (this.state.testOpen ? 'testOpen' : '') } 
+                        ${this.state.radialMenuConfig.styleClass} `
+                    } 
+                    style = {{
                         width: `${this.state.radialMenuConfig.width}px`,
                         height: `${this.state.radialMenuConfig.width}px`,
                     }} >
