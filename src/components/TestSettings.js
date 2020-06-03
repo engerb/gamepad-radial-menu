@@ -4,13 +4,13 @@ import React from "react";
 // import DatGui, { DatBoolean, DatColor, DatNumber, DatString } from 'react-dat-gui';
 import DatGui, {
     DatBoolean,
-    DatButton,
+    // DatButton,
     DatColor,
     DatFolder,
     DatNumber,
     DatPresets,
     DatSelect,
-    DatString
+    // DatString
   } from 'react-dat-gui';
 
 class TestSettings extends React.Component {
@@ -109,6 +109,14 @@ class TestSettings extends React.Component {
                             <DatNumber label='Item gap' path='radialMenuConfig.degSpace' min={0} max={2} step={0.1} />
                             <DatNumber label='Selection confirmation (ms)' path='radialMenuConfig.selectTime' min={0} max={1000} step={1} />
                             <DatBoolean label='Center first item' path='radialMenuConfig.centerTop' />
+
+                            <DatFolder title='Colours'>
+                                <DatColor label='Unselected' path='radialMenuConfig.inactiveColor' />
+                                <DatColor label='Hover' path='radialMenuConfig.hoverColor' />
+                                <DatColor label='Selected' path='radialMenuConfig.selectionColor' />
+                                <DatColor label='Selected hover' path='radialMenuConfig.hoverSelectionColor' />
+                                <DatColor label='Disabled' path='radialMenuConfig.disabledColor' />
+                            </DatFolder>
 
                             <DatFolder title='Selector style'>
                                 <DatSelect label='Selector class' path='radialMenuConfig.selectorStyle.styleClass' options={['dot', 'shadow', 'animalCrossing']}/>

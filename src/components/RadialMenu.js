@@ -65,9 +65,11 @@ class RadialMenu extends React.Component {
     /* When controller is plugged in, and if selection button is pressed, compute values needed to know if a selection will happen */
     pollGamepads() {
         // Get state of controller, w3.org/TR/gamepad/ for PS4 mapping
-        const gamePad = navigator.getGamepads()[this.gamePadIndex];
-        const x = gamePad.axes[2], y = gamePad.axes[3];
-        const activeButton = gamePad.buttons[this.state.activeButton].pressed;
+        const 
+            gamePad = navigator.getGamepads()[this.gamePadIndex],
+            x = gamePad.axes[2], 
+            y = gamePad.axes[3],
+            activeButton = gamePad.buttons[this.state.activeButton].pressed;
 
         
         // Determine if the menu should be open or not:
@@ -213,22 +215,20 @@ class RadialMenu extends React.Component {
         const itemBG = (() => {
             const width = this.state.radialMenuConfig.width;
             const styleClass = this.state.radialMenuConfig.styleClass;
-            const strokeWidth = this.state.radialMenuConfig.strokeWidth;
 
             if (styleClass === 'circle') {
                 const degWidth = (360 / this.state.radialMenuItems.length);
-                var sections = [];
+                let sections = [];
 
                 // Calculate all the vertices
                 for (let i = 0; i < this.state.radialMenuItems.length; i++) {
-                    const degStart = (this.state.radialMenuConfig.centerTop ? -(degWidth / 2) + -90 : -90 ) + (degWidth * i) + this.state.radialMenuConfig.degSpace;
-                    const degEnd = (this.state.radialMenuConfig.centerTop ? (degWidth / 2) - 90 : degWidth - 90 ) + (degWidth * i) - this.state.radialMenuConfig.degSpace;
-
-                    const x1 = Math.round( width * Math.cos(Math.PI * degStart / 180) ) + (width/2);
-                    const y1 = Math.round( width * Math.sin(Math.PI * degStart / 180) ) + (width/2);
-
-                    const x2 = Math.round( width * Math.cos(Math.PI * degEnd / 180) ) + (width/2);
-                    const y2 = Math.round( width * Math.sin(Math.PI * degEnd / 180) ) + (width/2);
+                    const
+                        degStart = (this.state.radialMenuConfig.centerTop ? -(degWidth / 2) + -90 : -90) + (degWidth * i) + this.state.radialMenuConfig.degSpace,
+                        degEnd = (this.state.radialMenuConfig.centerTop ? (degWidth / 2) - 90 : degWidth - 90) + (degWidth * i) - this.state.radialMenuConfig.degSpace,
+                        x1 = Math.round(width * Math.cos(Math.PI * degStart / 180)) + (width / 2),
+                        y1 = Math.round(width * Math.sin(Math.PI * degStart / 180)) + (width / 2),
+                        x2 = Math.round(width * Math.cos(Math.PI * degEnd / 180)) + (width / 2),
+                        y2 = Math.round(width * Math.sin(Math.PI * degEnd / 180)) + (width / 2);
 
                     sections.push(
                         <polygon key={i} 
@@ -236,8 +236,9 @@ class RadialMenu extends React.Component {
                             style = {{animationDuration: `${this.state.radialMenuConfig.selectTime}ms`}}
                             fill = {this.fillColor(i)}
                             mask = 'url(#mask)' 
-                            points = {`${x1},${y1} ${(width/2)},${(width/2)} ${x2},${y2}`} 
-                        />
+                            points = {` ${x1},${y1} 
+                                        ${(width/2)},${(width/2)} 
+                                        ${x2},${y2}`} />
                     );
                 }
 
@@ -246,7 +247,12 @@ class RadialMenu extends React.Component {
                         <svg height={width} width={width}>
                             <defs>
                                 <mask id='mask'>
-                                    <circle cx={width/2} cy={width/2} r={width/2 - strokeWidth/2} stroke='white' strokeWidth={strokeWidth} fill='none' />
+                                    <circle 
+                                        cx={width/2} 
+                                        cy={width/2} r={width/2 - this.state.radialMenuConfig.strokeWidth/2} 
+                                        stroke='white' 
+                                        strokeWidth={this.state.radialMenuConfig.strokeWidth} 
+                                        fill='none' />
                                 </mask>
                             </defs>
                             {sections}

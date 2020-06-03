@@ -11,43 +11,43 @@ class App extends React.Component {
         this.testingItems = [
             {
                 name: 'On delivery',
-                icon: 'onDelivery.png'
+                icon: require('./assets/img/icons/onDelivery.png').default,
             },
             {
                 name: 'Hello!',
-                icon: 'hello.png'
+                icon: require('./assets/img/icons/hello.png').default,
             },
             {
                 name: 'Right turn',
-                icon: 'turnRight.png'
+                icon: require('./assets/img/icons/turnRight.png').default,
             },
             {
                 name: 'Opps!',
-                icon: 'oops.png'
+                icon: require('./assets/img/icons/oops.png').default,
             },
             {
                 name: 'All off',
-                icon: 'none.png'
+                icon: require('./assets/img/icons/none.png').default,
             },
             {
                 name: 'Crossing',
-                icon: 'crossing.png'
+                icon: require('./assets/img/icons/crossing.png').default,
             },
             {
                 name: 'Left turn',
-                icon: 'turnLeft.png'
+                icon: require('./assets/img/icons/turnLeft.png').default,
             },
             {
                 name: 'Excuse me',
-                icon: 'excuseMe.png'
+                icon: require('./assets/img/icons/excuseMe.png').default,
             },
             {
                 name: 'Claxon',
-                icon: 'claxon.png'
+                icon: require('./assets/img/icons/claxon.png').default,
             },
             {
                 name: 'Wink',
-                icon: 'wink.png'
+                icon: require('./assets/img/icons/wink.png').default,
             }
         ];
 
@@ -72,10 +72,11 @@ class App extends React.Component {
                 inactiveColor: 'rgba(0, 0, 0, 0.575)',
                 selectionColor: 'rgb(0, 162, 255)',
                 hoverSelectionColor: 'rgb(106, 200, 255)',
+                disabledColor: 'rgba(0, 0, 0, 0.3)',
 
-                labelHoverColor: '#grey',
-                labelInactiveColor: '#red',
-                labelSelectionColor: '#blue',
+                // labelHoverColor: '#grey',
+                // labelInactiveColor: '#red',
+                // labelSelectionColor: '#blue',
                 
                 selectorStyle: {
                     width: 10,
@@ -98,7 +99,7 @@ class App extends React.Component {
         return (
             <Router>
                 <Switch>
-                    <Route path='/bar'>
+                    <Route path='/flat'>
                         <h1>It's a cool flat menu!</h1>
                     </Route>
                     <Route path='/'>
