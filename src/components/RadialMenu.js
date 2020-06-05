@@ -179,6 +179,55 @@ class RadialMenu extends React.Component {
         }
     }
 
+    /* State driven style for menu */
+    fillOpacity(i) {
+        if (this.state.hoverIndex == i && this.state.selectionIndex == i) {
+            return this.state.radialMenuConfig.hoverSelectionOpacity;
+        } else if (this.state.selectionIndex == i) {
+            return this.state.radialMenuConfig.selectionOpacity;
+        } else if (this.state.hoverIndex == i) {
+            return this.state.radialMenuConfig.hoverOpacity;
+        } else {
+            return this.state.radialMenuConfig.inactiveOpacity;
+        }
+    }
+
+    /* Used for selecting an icon that can be seen against the background color */
+    checkContrast( hex ) {
+        const threshold = 160, // close to half 256 ~130
+            r = parseInt( hex.substring(1, 3), 16),
+            g = parseInt( hex.substring(3, 5), 16),
+            b = parseInt( hex.substring(5, 7), 16);
+            
+        const cBrightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        
+        if (cBrightness > threshold) {
+            return 'black';
+        } else { 
+            return 'white';
+        }	
+    }
+
+    makeLabel(text, width, i) {
+        if (['inside', 'centerAndInside'].includes(this.state.radialMenuConfig.labels)) {
+            return <p style = {{
+                color: `${(this.checkContrast( this.fillColor(i) ) == 'black' ? 'black' : 'white')}`,
+                // fontSize: `${(width / (text.length / 0.5)) * 3}px`,
+                }}>
+                    {text}
+                </p>;
+
+        } else if (['above', 'centerAndAbove'].includes(this.state.radialMenuConfig.labels) && (this.state.hoverIndex >= 0 || !this.state.interact)) {
+            const floatingText = (
+                this.state.interact ?
+                this.state.radialMenuItems[this.state.hoverIndex].name
+                : this.state.radialMenuItems[this.state.selectionIndex].name
+            );
+
+            return; // return a floating label
+        }
+    }
+
 
     /* Receive items and other configs for menu */
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -205,14 +254,69 @@ class RadialMenu extends React.Component {
         );
 
         const items = (() => {
-            return <div></div>;
+            // Get max width/height based on inner/outer radius constrained by quantity in circumference
+            const degWidth = (360 / this.state.radialMenuItems.length);
+            const radius = (this.state.radialMenuConfig.width - this.state.radialMenuConfig.strokeWidth) - 5; // radius to center of 'stroke' of menu
+            const circumference = 1 * Math.PI * radius;
+            const arcGap = circumference * ((this.state.radialMenuConfig.degSpace * this.state.radialMenuItems.length) / 360); // circumference of gaps
+            const maxWidth = ((
+                this.state.radialMenuConfig.strokeWidth < ((circumference / this.state.radialMenuItems.length) - arcGap) ?
+                this.state.radialMenuConfig.strokeWidth :
+                ((circumference / this.state.radialMenuItems.length) - arcGap)
+            ) - 5);
+
+            let items = [];
+            for (let i = 0; i < this.state.radialMenuItems.length; i++) {
+                const deg = (!this.state.radialMenuConfig.centerTop ? -(degWidth / 2) + -90 : -90) + (degWidth * i),
+                    x = Math.round((radius / 2) * Math.cos(Math.PI * deg / 180)) + (radius / 2),
+                    y = Math.round((radius / 2) * Math.sin(Math.PI * deg / 180)) + (radius / 2);
+
+                const item = this.state.radialMenuItems[i];
+
+                items.push(
+                    <div key={i} 
+                        className = {`item ${((this.state.hoverIndex == i) ? 'hover' : '')} ${((this.state.selectionIndex == i) ? 'selected' : '')}`}
+                        style = {{
+                            animationDuration: `${this.state.radialMenuConfig.selectTime}ms`,
+                            left: `${x}px`,
+                            top: `${y}px`,
+                            width: `${this.state.radialMenuConfig.strokeWidth}px`,
+                            height: `${this.state.radialMenuConfig.strokeWidth}px`,
+                            }}>
+                            <div className = {`itemChild ${this.state.radialMenuConfig.labels}`}
+                                style = {{
+                                    width: `${maxWidth}px`,
+                                    height: `${maxWidth}px`,
+                                }}>
+                                <div style = {{backgroundImage: `url(${ (this.checkContrast( this.fillColor(i) ) == 'black' ? item.iconBlack : item.iconWhite) })`}} />
+                                {this.makeLabel( item.name, maxWidth, i )}
+                            </div>
+                    </div>
+                );
+            }
+
+
+            return <div className = 'items'>{items}</div>;
         })();
 
-        const itemTitles = (() => {
-            return <div></div>;
+        const itemCenter = (() => {
+            if (['center', 'centerAndInside', 'centerAndAbove'].includes(this.state.radialMenuConfig.labels) && (this.state.hoverIndex >= 0 || !this.state.interact)) {
+
+                // Get item to show (and hold if selected)
+                const item = (
+                    this.state.interact ?
+                    this.state.radialMenuItems[this.state.hoverIndex]
+                    : this.state.radialMenuItems[this.state.selectionIndex]
+                );
+
+                return <div className = 'centerTitle'>
+                    <div style = {{backgroundImage: `url(${item.iconWhite})`}} />
+                    <p>{item.name}</p>
+                </div>;
+            }
         })();
 
-        const itemBG = (() => {
+        const menuBG = (() => {
             const width = this.state.radialMenuConfig.width;
             const styleClass = this.state.radialMenuConfig.styleClass;
 
@@ -235,6 +339,7 @@ class RadialMenu extends React.Component {
                             className = {`${((this.state.hoverIndex == i) ? 'hover' : '')} ${((this.state.selectionIndex == i) ? 'selected' : '')}`}
                             style = {{animationDuration: `${this.state.radialMenuConfig.selectTime}ms`}}
                             fill = {this.fillColor(i)}
+                            opacity = {this.fillOpacity(i)}
                             mask = 'url(#mask)' 
                             points = {` ${x1},${y1} 
                                         ${(width/2)},${(width/2)} 
@@ -275,10 +380,10 @@ class RadialMenu extends React.Component {
                         width: `${this.state.radialMenuConfig.width}px`,
                         height: `${this.state.radialMenuConfig.width}px`,
                     }} >
-                    {items}
-                    {itemTitles}
-                    {itemBG}
+                    {menuBG}
                     {selector}
+                    {itemCenter}
+                    {items}
                 </div>
             </div>
         );

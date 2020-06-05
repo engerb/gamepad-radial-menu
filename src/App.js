@@ -11,43 +11,53 @@ class App extends React.Component {
         this.testingItems = [
             {
                 name: 'On delivery',
-                icon: require('./assets/img/icons/onDelivery.png').default,
+                iconWhite: require('./assets/img/icons/onDelivery_white.png').default,
+                iconBlack: require('./assets/img/icons/onDelivery_black.png').default,
             },
             {
                 name: 'Hello!',
-                icon: require('./assets/img/icons/hello.png').default,
+                iconWhite: require('./assets/img/icons/hello_white.png').default,
+                iconBlack: require('./assets/img/icons/hello_black.png').default,
             },
             {
                 name: 'Right turn',
-                icon: require('./assets/img/icons/turnRight.png').default,
+                iconWhite: require('./assets/img/icons/turnRight_white.png').default,
+                iconBlack: require('./assets/img/icons/turnRight_black.png').default,
             },
             {
                 name: 'Opps!',
-                icon: require('./assets/img/icons/oops.png').default,
+                iconWhite: require('./assets/img/icons/oops_white.png').default,
+                iconBlack: require('./assets/img/icons/oops_black.png').default,
             },
             {
                 name: 'All off',
-                icon: require('./assets/img/icons/none.png').default,
+                iconWhite: require('./assets/img/icons/none_white.png').default,
+                iconBlack: require('./assets/img/icons/none_black.png').default,
             },
             {
                 name: 'Crossing',
-                icon: require('./assets/img/icons/crossing.png').default,
+                iconWhite: require('./assets/img/icons/crossing_white.png').default,
+                iconBlack: require('./assets/img/icons/crossing_black.png').default,
             },
             {
                 name: 'Left turn',
-                icon: require('./assets/img/icons/turnLeft.png').default,
+                iconWhite: require('./assets/img/icons/turnLeft_white.png').default,
+                iconBlack: require('./assets/img/icons/turnLeft_black.png').default,
             },
             {
                 name: 'Excuse me',
-                icon: require('./assets/img/icons/excuseMe.png').default,
+                iconWhite: require('./assets/img/icons/excuseMe_white.png').default,
+                iconBlack: require('./assets/img/icons/excuseMe_black.png').default,
             },
             {
                 name: 'Claxon',
-                icon: require('./assets/img/icons/claxon.png').default,
+                iconWhite: require('./assets/img/icons/claxon_white.png').default,
+                iconBlack: require('./assets/img/icons/claxon_black.png').default,
             },
             {
                 name: 'Wink',
-                icon: require('./assets/img/icons/wink.png').default,
+                iconWhite: require('./assets/img/icons/wink_white.png').default,
+                iconBlack: require('./assets/img/icons/wink_black.png').default,
             }
         ];
 
@@ -65,18 +75,24 @@ class App extends React.Component {
                 selectTime: 400,
                 strokeWidth: 100,
                 centerTop: true,
-                labels: 'inside',
+                labels: 'centerAndInside',
                 styleClass: 'circle',
                 
-                hoverColor: 'rgba(255, 255, 255, 0.849)',
-                inactiveColor: 'rgba(0, 0, 0, 0.575)',
-                selectionColor: 'rgb(0, 162, 255)',
-                hoverSelectionColor: 'rgb(106, 200, 255)',
-                disabledColor: 'rgba(0, 0, 0, 0.3)',
+                hoverColor: '#FFFFFF',
+                inactiveColor: '#000000',
+                selectionColor: '#00A2FF',
+                hoverSelectionColor: '#6AC8FF',
+                disabledColor: '#515151',
 
-                // labelHoverColor: '#grey',
-                // labelInactiveColor: '#red',
-                // labelSelectionColor: '#blue',
+                // floating label bg
+                // floating label opacity
+                // floating label text
+
+                hoverOpacity: 0.85,
+                inactiveOpacity: 0.58,
+                selectionOpacity: 1,
+                hoverSelectionOpacity: 1,
+                disabledOpacity: 0.3,
                 
                 selectorStyle: {
                     width: 10,
@@ -85,7 +101,7 @@ class App extends React.Component {
                 }
             },
             itemCount: 8,
-            radialMenuItems: this.testingItems.slice(0, 6),
+            radialMenuItems: this.testingItems.slice(0, 8),
             activeButton: 13
         }
 

@@ -103,7 +103,7 @@ class TestSettings extends React.Component {
                         
                         <DatFolder title='Style'>
                             <DatSelect label='Menu class' path='radialMenuConfig.styleClass' options={['circle', 'octo', 'animalCrossing']}/>
-                            <DatSelect label='Labels' path='radialMenuConfig.labels' options={['center', 'above', 'inside']}/> 
+                            <DatSelect label='Labels' path='radialMenuConfig.labels' options={['center', 'above', 'inside', 'centerAndInside', 'centerAndAbove']}/> 
                             <DatNumber label='Menu width' path='radialMenuConfig.width' min={300} max={1000} step={1} />
                             <DatNumber label='Menu thickness' path='radialMenuConfig.strokeWidth' min={50} max={500} step={1} />
                             <DatNumber label='Item gap' path='radialMenuConfig.degSpace' min={0} max={2} step={0.1} />
@@ -112,10 +112,15 @@ class TestSettings extends React.Component {
 
                             <DatFolder title='Colours'>
                                 <DatColor label='Unselected' path='radialMenuConfig.inactiveColor' />
+                                <DatNumber label='...Opacity' path='radialMenuConfig.inactiveOpacity' min={0} max={1} step={0.01} />
                                 <DatColor label='Hover' path='radialMenuConfig.hoverColor' />
+                                <DatNumber label='...Opacity' path='radialMenuConfig.hoverOpacity' min={0} max={1} step={0.01} />
                                 <DatColor label='Selected' path='radialMenuConfig.selectionColor' />
+                                <DatNumber label='...Opacity' path='radialMenuConfig.selectionOpacity' min={0} max={1} step={0.01} />
                                 <DatColor label='Selected hover' path='radialMenuConfig.hoverSelectionColor' />
+                                <DatNumber label='...Opacity' path='radialMenuConfig.hoverSelectionOpacity' min={0} max={1} step={0.01} />
                                 <DatColor label='Disabled' path='radialMenuConfig.disabledColor' />
+                                <DatNumber label='...Opacity' path='radialMenuConfig.disabledOpacity' min={0} max={1} step={0.01} />
                             </DatFolder>
 
                             <DatFolder title='Selector style'>
