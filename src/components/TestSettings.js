@@ -1,7 +1,6 @@
 import 'react-dat-gui/dist/index.css';
 
 import React from "react";
-// import DatGui, { DatBoolean, DatColor, DatNumber, DatString } from 'react-dat-gui';
 import DatGui, {
     DatBoolean,
     // DatButton,
@@ -52,7 +51,7 @@ class TestSettings extends React.Component {
         this.handleUpdate = ((newData) => {
             const activeButton = Number(String(newData.activeButtonName).split(':')[0]);
             newData.activeButton = activeButton;
-
+            
             if (newData.itemCount != this.state.data.itemCount) {
                 this.props.itemCountCallback(newData.itemCount);
             } else if (activeButton != this.state.data.activeButton) {
@@ -60,7 +59,6 @@ class TestSettings extends React.Component {
             } else {
                 this.props.radialMenuConfigCallback(newData.radialMenuConfig);
             }
-
 
             this.setState({data: newData});
         });
@@ -87,16 +85,149 @@ class TestSettings extends React.Component {
             : null
         );
 
+        const presets = [{
+            Circle_1: {  
+                radialMenuConfig: {
+                    toggle: this.state.data.radialMenuConfig.toggle,
+                    deadZone: this.state.data.radialMenuConfig.deadZone,
+                    selectionRadius: this.state.data.radialMenuConfig.selectionRadius,
+
+                    width: 650,
+                    degSpace: 0.3,
+                    selectTime: 400,
+                    strokeWidth: 70,
+                    centerTop: true,
+                    labels: 'center',
+                    styleClass: 'circle',
+                    
+                    hoverColor: '#FFFFFF',
+                    inactiveColor: '#000000',
+                    selectionColor: '#2D9CDB',
+                    hoverSelectionColor: '#35AAED',
+                    disabledColor: '#515151',
+
+                    floatingLabelColor: '#12C2A2',
+                    floatingLabelText: '#FEFBE3',
+                    floatingLabelOpacity: 0.9,
+
+                    hoverOpacity: 1,
+                    inactiveOpacity: 0.5,
+                    selectionOpacity: 1,
+                    hoverSelectionOpacity: 1,
+                    disabledOpacity: 0.3,
+                    
+                    selectorStyle: {
+                        width: 10,
+                        styleClass: 'dot',
+                        showSelector: false,
+                    }
+                },
+                
+                itemCount: this.state.data.itemCount,
+                activeButton: this.state.data.activeButton,
+                activeButtonName: this.state.data.activeButtonName,
+                showHelp: this.state.data.activeButtonName
+            },
+            Circle_2: {  
+                radialMenuConfig: {
+                    toggle: this.state.data.radialMenuConfig.toggle,
+                    deadZone: this.state.data.radialMenuConfig.deadZone,
+                    selectionRadius: this.state.data.radialMenuConfig.selectionRadius,
+
+                    width: 650,
+                    degSpace: 0.3,
+                    selectTime: 400,
+                    strokeWidth: 100,
+                    centerTop: true,
+                    labels: 'inside',
+                    styleClass: 'circle',
+                    
+                    hoverColor: '#FFFFFF',
+                    inactiveColor: '#000000',
+                    selectionColor: '#2D9CDB',
+                    hoverSelectionColor: '#35AAED',
+                    disabledColor: '#515151',
+
+                    floatingLabelColor: '#12C2A2',
+                    floatingLabelText: '#FEFBE3',
+                    floatingLabelOpacity: 0.9,
+
+                    hoverOpacity: 1,
+                    inactiveOpacity: 0.5,
+                    selectionOpacity: 1,
+                    hoverSelectionOpacity: 1,
+                    disabledOpacity: 0.3,
+                    
+                    selectorStyle: {
+                        width: 10,
+                        styleClass: 'dot',
+                        showSelector: false,
+                    }
+                },
+
+                itemCount: this.state.data.itemCount,
+                activeButton: this.state.data.activeButton,
+                activeButtonName: this.state.data.activeButtonName,
+                showHelp: this.state.data.activeButtonName
+            },
+            AnimalCrossing: {  
+                radialMenuConfig: {
+                    toggle: this.state.data.radialMenuConfig.toggle,
+                    deadZone: this.state.data.radialMenuConfig.deadZone,
+                    selectionRadius: this.state.data.radialMenuConfig.selectionRadius,
+
+                    width: 460,
+                    degSpace: 0.5,
+                    selectTime: 400,
+                    strokeWidth: 110,
+                    centerTop: true,
+                    labels: 'above',
+                    styleClass: 'animalCrossing',
+                    
+                    hoverColor: '#FEFBE3',
+                    inactiveColor: '#000000',
+                    selectionColor: '#12C2A2',
+                    hoverSelectionColor: '#12C2A2',
+                    disabledColor: '#515151',
+
+                    floatingLabelColor: '#12C2A2',
+                    floatingLabelText: '#FEFBE3',
+                    floatingLabelOpacity: 1,
+
+                    hoverOpacity: 1,
+                    inactiveOpacity: 0.65,
+                    selectionOpacity: 1,
+                    hoverSelectionOpacity: 1,
+                    disabledOpacity: 0.3,
+                    
+                    selectorStyle: {
+                        width: 70,
+                        styleClass: 'hand',
+                        showSelector: true,
+                    }
+                },
+
+                itemCount: this.state.data.itemCount,
+                activeButton: this.state.data.activeButton,
+                activeButtonName: this.state.data.activeButtonName,
+                showHelp: this.state.data.activeButtonName
+            },
+              
+        }];
+
         return (
             <div className = 'configMain' >
                 <div style = {(this.state.menuOpen ? null : {display: 'none'})}
                     onMouseEnter = { () => this.hover(true) }
                     onMouseLeave = { () => this.hover(false) } >
                     <DatGui data={data} onUpdate={this.handleUpdate}>
+                        <DatPresets label="Presets" options={presets} onUpdate={this.handleUpdate} />
+                        <DatSelect label='Controller button' path='activeButtonName' options={this.controllerButtons}/>
+                        <DatBoolean label='Button toggle' path='radialMenuConfig.toggle' />
                         <DatFolder title='Functionality'>
                             <DatNumber label='Item count' path='itemCount' min={3} max={10} step={1} />
-                            <DatSelect label='Controller button' path='activeButtonName' options={this.controllerButtons}/>
-                            <DatBoolean label='Button toggle' path='radialMenuConfig.toggle' />
+                            {/* <DatSelect label='Controller button' path='activeButtonName' options={this.controllerButtons}/> */}
+                            {/* <DatBoolean label='Button toggle' path='radialMenuConfig.toggle' /> */}
                             <DatNumber label='Selection radius' path='radialMenuConfig.selectionRadius' min={0.2} max={0.9} step={0.1} />
                             <DatNumber label='Dead zone' path='radialMenuConfig.deadZone' min={0.05} max={0.9} step={0.01} />
                         </DatFolder>
@@ -121,11 +252,15 @@ class TestSettings extends React.Component {
                                 <DatNumber label='...Opacity' path='radialMenuConfig.hoverSelectionOpacity' min={0} max={1} step={0.01} />
                                 <DatColor label='Disabled' path='radialMenuConfig.disabledColor' />
                                 <DatNumber label='...Opacity' path='radialMenuConfig.disabledOpacity' min={0} max={1} step={0.01} />
+
+                                <DatColor label='Floating label' path='radialMenuConfig.floatingLabelColor' />
+                                <DatColor label='Text' path='radialMenuConfig.floatingLabelText' />
+                                <DatNumber label='...Opacity' path='radialMenuConfig.floatingLabelOpacity' min={0} max={1} step={0.01} />
                             </DatFolder>
 
                             <DatFolder title='Selector style'>
                                 <DatSelect label='Selector class' path='radialMenuConfig.selectorStyle.styleClass' options={['dot', 'shadow', 'animalCrossing']}/>
-                                <DatNumber label='Menu thickness' path='radialMenuConfig.selectorStyle.width' min={1} max={500} step={1} />
+                                <DatNumber label='Width' path='radialMenuConfig.selectorStyle.width' min={1} max={500} step={1} />
                                 <DatBoolean label='Show selector' path='radialMenuConfig.selectorStyle.showSelector' />
                             </DatFolder>
                         </DatFolder>

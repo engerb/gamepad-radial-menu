@@ -70,26 +70,26 @@ class App extends React.Component {
                 deadZone: 0.0,
                 selectionRadius: 0.3,
                 
-                width: 600,
-                degSpace: 0.5,
+                width: 650,
+                degSpace: 0.3,
                 selectTime: 400,
-                strokeWidth: 100,
+                strokeWidth: 70,
                 centerTop: true,
-                labels: 'centerAndInside',
+                labels: 'center',
                 styleClass: 'circle',
                 
                 hoverColor: '#FFFFFF',
                 inactiveColor: '#000000',
-                selectionColor: '#00A2FF',
-                hoverSelectionColor: '#6AC8FF',
+                selectionColor: '#2D9CDB',
+                hoverSelectionColor: '#35AAED',
                 disabledColor: '#515151',
 
-                // floating label bg
-                // floating label opacity
-                // floating label text
+                floatingLabelColor: '#12C2A2',
+                floatingLabelText: '#FEFBE3',
+                floatingLabelOpacity: 0.9,
 
-                hoverOpacity: 0.85,
-                inactiveOpacity: 0.58,
+                hoverOpacity: 1,
+                inactiveOpacity: 0.5,
                 selectionOpacity: 1,
                 hoverSelectionOpacity: 1,
                 disabledOpacity: 0.3,
@@ -97,7 +97,7 @@ class App extends React.Component {
                 selectorStyle: {
                     width: 10,
                     styleClass: 'dot',
-                    showSelector: true,
+                    showSelector: false,
                 }
             },
             itemCount: 8,

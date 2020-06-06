@@ -1,6 +1,6 @@
 /* 
     Radial menu component that handles controller, radial menu rendering and
-    selection. Selection params and items in menu are handles in a higher state?
+    selection. 
 */
 
 import React from "react";
@@ -65,8 +65,7 @@ class RadialMenu extends React.Component {
     /* When controller is plugged in, and if selection button is pressed, compute values needed to know if a selection will happen */
     pollGamepads() {
         // Get state of controller, w3.org/TR/gamepad/ for PS4 mapping
-        const 
-            gamePad = navigator.getGamepads()[this.gamePadIndex],
+        const gamePad = navigator.getGamepads()[this.gamePadIndex],
             x = gamePad.axes[2], 
             y = gamePad.axes[3],
             activeButton = gamePad.buttons[this.state.activeButton].pressed;
@@ -74,7 +73,7 @@ class RadialMenu extends React.Component {
         
         // Determine if the menu should be open or not:
         if (this.state.interact) {
-            // .... Flow for menu toggle
+            // Flow for menu toggle
             if (this.state.radialMenuConfig.toggle) {
                 if (activeButton) { 
                     if (!this.state.menuOpen) { 
@@ -91,7 +90,7 @@ class RadialMenu extends React.Component {
                         this.setState({ activeButtonToggled: false });
                     }
                 }
-            // .... Flow for simple press and release of button
+            // Flow for simple press and release of button
             } else {
                 if (activeButton) { 
                     this.setState({ menuOpen: true });
@@ -109,7 +108,7 @@ class RadialMenu extends React.Component {
                 return (( theta >= 0 ? theta : theta + 360 ) + offset) % 360;
             })();
 
-            // Get the radius / distance of joistick from center from 0 center to 1 outer
+            // Get the radius / distance of joystick from center from 0 center to 1 outer
             const radius = (( val = Math.sqrt( x * x + y * y ) ) => {
                 return (val > 1 ? 1 : val);
             })();
@@ -150,7 +149,8 @@ class RadialMenu extends React.Component {
                             });
                         }, (this.state.radialMenuConfig.selectTime));
 
-                        // console.log('Selection: ' + i);
+                        // This might be where you now send the selection off
+                        console.log({Selection: this.state.radialMenuItems[i]}); 
                     } else {
                         this.setState({ hoverIndex: i });
                     }
@@ -166,6 +166,7 @@ class RadialMenu extends React.Component {
         }
     }
 
+
     /* State driven style for menu */
     fillColor(i) {
         if (this.state.hoverIndex == i && this.state.selectionIndex == i) {
@@ -179,7 +180,6 @@ class RadialMenu extends React.Component {
         }
     }
 
-    /* State driven style for menu */
     fillOpacity(i) {
         if (this.state.hoverIndex == i && this.state.selectionIndex == i) {
             return this.state.radialMenuConfig.hoverSelectionOpacity;
@@ -191,6 +191,17 @@ class RadialMenu extends React.Component {
             return this.state.radialMenuConfig.inactiveOpacity;
         }
     }
+
+    cssRGBA(i) {
+        const hex = this.fillColor(i),
+            alpha = this.fillOpacity(i),
+            r = "0x" + hex[1] + hex[2],
+            g = "0x" + hex[3] + hex[4],
+            b = "0x" + hex[5] + hex[6];
+
+        return "rgba("+ +r + "," + +g + "," + +b + "," + +alpha + ")";
+    }
+
 
     /* Used for selecting an icon that can be seen against the background color */
     checkContrast( hex ) {
@@ -208,23 +219,33 @@ class RadialMenu extends React.Component {
         }	
     }
 
+
+    /* Label above or inside the items */
     makeLabel(text, width, i) {
         if (['inside', 'centerAndInside'].includes(this.state.radialMenuConfig.labels)) {
             return <p style = {{
                 color: `${(this.checkContrast( this.fillColor(i) ) == 'black' ? 'black' : 'white')}`,
-                // fontSize: `${(width / (text.length / 0.5)) * 3}px`,
+                // fontSize: `${(width / (text.length / 0.5)) * 3}px`,      // could be fill space...
                 }}>
                     {text}
                 </p>;
 
-        } else if (['above', 'centerAndAbove'].includes(this.state.radialMenuConfig.labels) && (this.state.hoverIndex >= 0 || !this.state.interact)) {
+        } else if (['above', 'centerAndAbove'].includes(this.state.radialMenuConfig.labels) && ((this.state.interact && this.state.hoverIndex == i) || (!this.state.interact && this.state.selectionIndex == i))) {
             const floatingText = (
                 this.state.interact ?
-                this.state.radialMenuItems[this.state.hoverIndex].name
-                : this.state.radialMenuItems[this.state.selectionIndex].name
+                this.state.radialMenuItems[this.state.hoverIndex].name :
+                this.state.radialMenuItems[this.state.selectionIndex].name
             );
 
-            return; // return a floating label
+            return <div className = 'floatingLabel' 
+                style = {{
+                    backgroundColor: `${this.state.radialMenuConfig.floatingLabelColor}`,
+                    opacity: `${this.state.radialMenuConfig.floatingLabelOpacity}`,
+                    top: `-${width/2 + 10}px`}}>
+                <p style = {{color: `${this.state.radialMenuConfig.floatingLabelText}`}}>
+                    {text}
+                </p>
+            </div>;
         }
     }
 
@@ -241,29 +262,31 @@ class RadialMenu extends React.Component {
 
 
     render() {
+        // The pointer showing the joystick position
         const selector = (
             this.state.radialMenuConfig.selectorStyle.showSelector ?
             <div className = {`selector ${this.state.radialMenuConfig.selectorStyle.styleClass}`} style={{
-                left: `${Math.round(((this.state.x * .4 + .5) * this.state.radialMenuConfig.width) - (this.state.radialMenuConfig.selectorStyle.width / 2))}px`,
+                left: `${Math.round(((this.state.x * .4 + .5) * this.state.radialMenuConfig.width) - (this.state.radialMenuConfig.selectorStyle.width / 2))}px`, // todo: deadzone
                 top: `${Math.round(((this.state.y * .4 + .5) * this.state.radialMenuConfig.width) - (this.state.radialMenuConfig.selectorStyle.width / 2))}px`,
                 width: `${this.state.radialMenuConfig.selectorStyle.width}px`,
                 height: `${this.state.radialMenuConfig.selectorStyle.width}px`,
-                opacity: `${0.25 + (1 - 0.25) * this.state.radius}`
-            }}/>
-            : null
+                // opacity: `${0.25 + (1 - 0.25) * this.state.radius}` // this should be a decided option in state
+            }}/> :
+            null
         );
-
+        
+        // Icons and (optionally) their labels placed in a circle
         const items = (() => {
             // Get max width/height based on inner/outer radius constrained by quantity in circumference
-            const degWidth = (360 / this.state.radialMenuItems.length);
-            const radius = (this.state.radialMenuConfig.width - this.state.radialMenuConfig.strokeWidth) - 5; // radius to center of 'stroke' of menu
-            const circumference = 1 * Math.PI * radius;
-            const arcGap = circumference * ((this.state.radialMenuConfig.degSpace * this.state.radialMenuItems.length) / 360); // circumference of gaps
-            const maxWidth = ((
-                this.state.radialMenuConfig.strokeWidth < ((circumference / this.state.radialMenuItems.length) - arcGap) ?
-                this.state.radialMenuConfig.strokeWidth :
-                ((circumference / this.state.radialMenuItems.length) - arcGap)
-            ) - 5);
+            const degWidth = (360 / this.state.radialMenuItems.length),
+                radius = (this.state.radialMenuConfig.width - this.state.radialMenuConfig.strokeWidth) - 5,
+                circumference = 1 * Math.PI * radius,
+                arcGap = circumference * ((this.state.radialMenuConfig.degSpace * this.state.radialMenuItems.length) / 360),
+                maxWidth = ((
+                    this.state.radialMenuConfig.strokeWidth < ((circumference / this.state.radialMenuItems.length) - arcGap) ?
+                    this.state.radialMenuConfig.strokeWidth :
+                    ((circumference / this.state.radialMenuItems.length) - arcGap)
+                ) - 5);
 
             let items = [];
             for (let i = 0; i < this.state.radialMenuItems.length; i++) {
@@ -282,15 +305,16 @@ class RadialMenu extends React.Component {
                             top: `${y}px`,
                             width: `${this.state.radialMenuConfig.strokeWidth}px`,
                             height: `${this.state.radialMenuConfig.strokeWidth}px`,
+                        }}>
+                        <div className = {`itemChild ${this.state.radialMenuConfig.labels}`}
+                            style = {{
+                                width: `${maxWidth}px`,
+                                height: `${maxWidth}px`,
+                                backgroundColor: `${((this.state.radialMenuConfig.styleClass == 'animalCrossing') ? this.cssRGBA(i) : '')}`,
                             }}>
-                            <div className = {`itemChild ${this.state.radialMenuConfig.labels}`}
-                                style = {{
-                                    width: `${maxWidth}px`,
-                                    height: `${maxWidth}px`,
-                                }}>
-                                <div style = {{backgroundImage: `url(${ (this.checkContrast( this.fillColor(i) ) == 'black' ? item.iconBlack : item.iconWhite) })`}} />
-                                {this.makeLabel( item.name, maxWidth, i )}
-                            </div>
+                            <div className = 'icon' style = {{backgroundImage: `url(${ (this.checkContrast( this.fillColor(i) ) == 'black' ? item.iconBlack : item.iconWhite) })`}} />
+                            {this.makeLabel( item.name, maxWidth, i )}
+                        </div>
                     </div>
                 );
             }
@@ -298,15 +322,16 @@ class RadialMenu extends React.Component {
 
             return <div className = 'items'>{items}</div>;
         })();
-
+        
+        // Current hover or selected item shown in the center of the circle
         const itemCenter = (() => {
             if (['center', 'centerAndInside', 'centerAndAbove'].includes(this.state.radialMenuConfig.labels) && (this.state.hoverIndex >= 0 || !this.state.interact)) {
 
                 // Get item to show (and hold if selected)
                 const item = (
                     this.state.interact ?
-                    this.state.radialMenuItems[this.state.hoverIndex]
-                    : this.state.radialMenuItems[this.state.selectionIndex]
+                    this.state.radialMenuItems[this.state.hoverIndex] :
+                    this.state.radialMenuItems[this.state.selectionIndex]
                 );
 
                 return <div className = 'centerTitle'>
@@ -316,6 +341,7 @@ class RadialMenu extends React.Component {
             }
         })();
 
+        // Backgrounds for pie styles where vertices need to be created
         const menuBG = (() => {
             const width = this.state.radialMenuConfig.width;
             const styleClass = this.state.radialMenuConfig.styleClass;
@@ -381,9 +407,9 @@ class RadialMenu extends React.Component {
                         height: `${this.state.radialMenuConfig.width}px`,
                     }} >
                     {menuBG}
-                    {selector}
                     {itemCenter}
                     {items}
+                    {selector}
                 </div>
             </div>
         );
