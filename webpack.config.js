@@ -16,9 +16,6 @@ module.exports = {
             'sass-loader',
             ],
         },
-        // test for glb or somethin to signify uncompressed
-        // run draco
-        // give compressed to file-loader instead
         {
             test: /\.(png|svg|jpg|gif|glb|hdr|zip)$/,
             use: [{

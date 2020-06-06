@@ -4,6 +4,11 @@ body {
     margin: 0;
     font-family: 'Montserrat', sans-serif;
     background-color: #333333;
+
+    background-image: url('./assets/img/test-bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
 }
 
 .centerWrap {
@@ -13,12 +18,75 @@ body {
     transform: translate(-50%, -50%);
 }
 
+.configMain {
+    position: fixed;
+    right: 15px;
+    top: 15px;
+    width: 280px;
+    font-size: 12px;
+    font-family: Lucida Grande,sans-serif;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+
+    .react-dat-gui {
+        position: relative;
+        right: 0;
+        width: 100%;
+    }
+
+    .helpBox {
+        background-color: rgba(0, 0, 0, 0.8);
+        box-sizing: border-box;
+        padding: 15px 15px 5px 15px;
+        border-left: 5px solid #806787;
+        border-bottom: 1px solid #272727;
+        border-top: 1px solid #272727;
+
+        p {
+            color: rgb(211, 211, 211);
+            margin-top: 0;
+        }
+
+        span {
+            color: #806787;
+            font-weight: bold;
+        }
+
+        a {
+            color:#806787;
+        }
+
+        .warning {
+            color: rgb(218, 69, 69);
+        }
+    }
+
+    .toggleMenu {
+        background-color: black;
+        box-sizing: border-box;
+        padding: 5px 15px;
+        cursor: pointer;
+
+        p {
+            margin: 0;
+            color: white;
+        }
+    }
+}
+
 .radialMain {
     transition: all 60ms ease-in;
 
     &.open {
         opacity: 1;
         transform: scale(1);
+    }
+
+    &.testOpen {
+        opacity: 1!important;
+        transform: scale(1)!important;
     }
 
     &.closed {
@@ -40,6 +108,13 @@ body {
             background-color: black;
             filter: blur(75px);
         }
+
+        &.hand {
+            background-image: url('./assets/img/icons/pointer_hand.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 1000;
+        }
     }
 
     &.circle {
@@ -50,40 +125,206 @@ body {
                 position: absolute;
 
                 polygon {
-                    fill: rgba(0, 0, 0, 0.575);
                     transition: all 200ms;
-
                     transform: scale(0.98);
                     transform-origin: center;
+                    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.32));
 
-                    &.hover {
-                        fill: rgba(255, 255, 255, 0.849);
-                        transform: scale(1);
+                    &.hover &.selected {
+                        filter: drop-shadow(0 14px 28px rgba(0,0,0,0.75));
                     }
 
+                    &.hover { transform: scale(1); }
                     &.selected {
-                        fill: rgb(0, 162, 255);
-                        animation: select 400ms;
-
-                        &.hover {
-                            fill: rgb(106, 200, 255);
-                        }
+                        animation: select;
 
                         @keyframes select {
                             0%   {
-                                fill: rgb(0, 162, 255);
+                                opacity: 1;
                                 transform: scale(1);
                             } 50%  {
-                                fill: rgb(106, 200, 255);
-                                transform: scale(0.97);
+                                opacity: 0.8;
+                                transform: scale(0.98);
                             } 100% {
-                                fill: rgb(0, 162, 255);
+                                opacity: 1;
                                 transform: scale(1);
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    &.animalCrossing {
+        .items {
+            .item {
+                .itemChild {
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+                }
+                
+                &.hover { 
+                    .itemChild {
+                        box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+                    }
+                }
+            }
+
+            .itemChild {
+                .floatingLabel {
+                    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+                }
+            }
+        }
+    }
+
+    .items {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        .item {
+            position: absolute;
+
+            transition: all 200ms;
+            transform: scale(1);
+            transform-origin: center;
+
+            &.hover { 
+                transform: scale(1.1); 
+                z-index: 101;
+            }
+            &.selected {
+                animation: selectItem;
+                z-index: 100;
+
+                @keyframes selectItem {
+                    0%   {
+                        opacity: 1;
+                        transform: scale(1.1);
+                    } 50%  {
+                        opacity: 0.8;
+                        transform: scale(1);
+                    } 100% {
+                        opacity: 1;
+                        transform: scale(1.1);
+                    }
+                }
+            }
+            
+            .itemChild {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                border-radius: 50%;
+
+                .icon {
+                    width: 50%;
+                    height: 50%;
+                    margin-left: 25%;
+                    margin-top: 25%;
+                    background-size: contain;
+                    background-position: center center;
+                    background-repeat: no-repeat;
+                }
+
+                &.inside, &.centerAndInside {
+                    div {
+                        margin-top: 18%;
+                        height: 40%;
+                    }
+
+                    p { 
+                        position: absolute;
+                        bottom: 4%;
+                        left: 0;
+                        width: 100%;
+                        text-align: center;
+                    }
+                }
+
+                &.above {
+                    .floatingLabel {
+                        box-sizing: border-box;
+                        padding: 15px 30px;
+                        position: absolute;
+                        left: 50%;
+                        transform: translate(-50%, 0%);
+                        height: 60px;
+                        border-radius: 30px;
+                        width: fit-content;
+
+                        &::before {
+                            content: '';
+                            position: absolute;
+                            width: 30px;
+                            height: 30px;
+                            bottom: -15px;
+                            left: 50%;
+                            z-index: 1;
+                            background-color: inherit;
+                            transform: translate(-50%, 0%) rotate(45deg);
+                        }
+
+                        p {
+                            position: relative;
+                            z-index: 2;
+                            white-space: nowrap;
+                            text-align: center;
+                            font-size: 24px;
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .centerTitle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        width: 300px;
+        height: 300px;
+
+        &::before {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            left: 25%;
+            top: 25%;
+            border-radius: 50%;
+            background-color: black;
+            filter: blur(75px);
+            // opacity: 0.8;
+            z-index: 0;
+        }
+
+        div {
+            width: 70px;
+            height: 70px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 80px;
+            background-size: contain;
+            background-position: center center;
+            background-repeat: no-repeat;
+            position: relative;
+            z-index: 1;
+        }
+
+        p {
+            color: white;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
         }
     }
 }

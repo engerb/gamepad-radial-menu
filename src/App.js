@@ -10,72 +10,102 @@ class App extends React.Component {
 
         this.testingItems = [
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'On delivery',
+                iconWhite: require('./assets/img/icons/onDelivery_white.png').default,
+                iconBlack: require('./assets/img/icons/onDelivery_black.png').default,
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Hello!',
+                iconWhite: require('./assets/img/icons/hello_white.png').default,
+                iconBlack: require('./assets/img/icons/hello_black.png').default,
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Right turn',
+                iconWhite: require('./assets/img/icons/turnRight_white.png').default,
+                iconBlack: require('./assets/img/icons/turnRight_black.png').default,
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Opps!',
+                iconWhite: require('./assets/img/icons/oops_white.png').default,
+                iconBlack: require('./assets/img/icons/oops_black.png').default,
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'All off',
+                iconWhite: require('./assets/img/icons/none_white.png').default,
+                iconBlack: require('./assets/img/icons/none_black.png').default,
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Crossing',
+                iconWhite: require('./assets/img/icons/crossing_white.png').default,
+                iconBlack: require('./assets/img/icons/crossing_black.png').default,
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Left turn',
+                iconWhite: require('./assets/img/icons/turnLeft_white.png').default,
+                iconBlack: require('./assets/img/icons/turnLeft_black.png').default,
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Excuse me',
+                iconWhite: require('./assets/img/icons/excuseMe_white.png').default,
+                iconBlack: require('./assets/img/icons/excuseMe_black.png').default,
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Claxon',
+                iconWhite: require('./assets/img/icons/claxon_white.png').default,
+                iconBlack: require('./assets/img/icons/claxon_black.png').default,
             },
             {
-                name: 'hello',
-                icon: 'hello.png'
+                name: 'Wink',
+                iconWhite: require('./assets/img/icons/wink_white.png').default,
+                iconBlack: require('./assets/img/icons/wink_black.png').default,
             }
         ];
 
         // This would be inside RadialMenu, is only here for easy config for user testing
         this.state = {
             radialMenuConfig: {
-                styleClass: 'circle',
-                width: 600,
-                selectionRadius: 0.5, // 0-1
-                toggle: true,
-                centerTop: true,
-                strokeWidth: 100,
-                degSpace: 0.5,
+                testOpen: false,
+
+                toggle: false,
+                deadZone: 0.0,
+                selectionRadius: 0.3,
+                
+                width: 650,
+                degSpace: 0.3,
                 selectTime: 400,
-                labels: 'inside',
+                strokeWidth: 70,
+                centerTop: true,
+                labels: 'center',
+                styleClass: 'circle',
+                
+                hoverColor: '#FFFFFF',
+                inactiveColor: '#000000',
+                selectionColor: '#2D9CDB',
+                hoverSelectionColor: '#35AAED',
+                disabledColor: '#515151',
+
+                floatingLabelColor: '#12C2A2',
+                floatingLabelText: '#FEFBE3',
+                floatingLabelOpacity: 0.9,
+
+                hoverOpacity: 1,
+                inactiveOpacity: 0.5,
+                selectionOpacity: 1,
+                hoverSelectionOpacity: 1,
+                disabledOpacity: 0.3,
+                
                 selectorStyle: {
-                    showSelector: true,
                     width: 10,
-                    styleClass: 'dot'
+                    styleClass: 'dot',
+                    showSelector: false,
                 }
             },
-            itemCount: 6,
-            radialMenuItems: this.testingItems.slice(0, 6),
-            activeButton: 13,
-            // menuOpen: true
+            itemCount: 8,
+            radialMenuItems: this.testingItems.slice(0, 8),
+            activeButton: 13
         }
 
-        // this.menuToggleCallback = () => ({this.setState({menuOpen: !this.state.menuOpen}); console.log(this.state.menuOpen)});//this.setState({menuOpen: !this.state.menuOpen});
+        this.menuTestOpen = open => this.setState({testOpen: open});
         this.itemCountCallback = itemCount => this.setState({radialMenuItems: this.testingItems.slice(0, itemCount)});
         this.activeButtonCallback = activeButton => this.setState({activeButton: activeButton});
         this.radialMenuConfigCallback = radialMenuConfig => this.setState({radialMenuConfig: radialMenuConfig});
@@ -85,7 +115,7 @@ class App extends React.Component {
         return (
             <Router>
                 <Switch>
-                    <Route path='/bar'>
+                    <Route path='/flat'>
                         <h1>It's a cool flat menu!</h1>
                     </Route>
                     <Route path='/'>
@@ -93,7 +123,7 @@ class App extends React.Component {
                             radialMenuConfig = {this.state.radialMenuConfig} 
                             radialMenuItems = {this.state.radialMenuItems} 
                             activeButton = {this.state.activeButton}
-                            // menuOpen = {this.state.menuOpen}
+                            testOpen = {this.state.testOpen}
                         />
                     </Route>
                 </Switch>
@@ -103,7 +133,7 @@ class App extends React.Component {
                     radialMenuConfig = {this.state.radialMenuConfig} 
                     itemCount = {this.state.itemCount} 
                     activeButton = {this.state.activeButton}
-                    // menuToggleCallback = {this.menuToggleCallback}
+                    menuTestOpen = {this.menuTestOpen}
                     itemCountCallback = {this.itemCountCallback} 
                     activeButtonCallback = {this.activeButtonCallback} 
                     radialMenuConfigCallback = {this.radialMenuConfigCallback}
