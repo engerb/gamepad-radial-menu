@@ -28,7 +28,7 @@
     "css-loader": "^3.5.2",
     "file-loader": "^5.1.0",
     "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^5.5.0",
     "node-sass": "^4.13.1",
     "react": "^16.13.1",
     "react-dat-gui": "^4.0.3",
